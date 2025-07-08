@@ -68,6 +68,15 @@ export const updateProject = async (id, updates) => {
   return { data, error };
 };
 
+export const getProject = async (id) => {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('id', id)
+    .single();
+  return { data, error };
+};
+
 export const deleteProject = async (id) => {
   const { error } = await supabase
     .from('projects')
@@ -105,6 +114,15 @@ export const updateTask = async (id, updates) => {
     .update({ ...updates, updated_at: new Date() })
     .eq('id', id)
     .select();
+  return { data, error };
+};
+
+export const getTask = async (id) => {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('id', id)
+    .single();
   return { data, error };
 };
 

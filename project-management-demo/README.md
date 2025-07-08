@@ -118,6 +118,43 @@ project-management-demo/
 - Environment variables secure sensitive information
 - HTTPS enforced for all communications
 
+## 🚢 Deployment
+
+### Deploying to Netlify
+
+1. **Prepare your repository**
+   - Ensure all environment variables are properly set up in `.env.example`
+   - Make sure `.env` is in your `.gitignore` file
+   - Commit all changes to your repository
+
+2. **Connect to Netlify**
+   - Log in to your Netlify account
+   - Click "New site from Git"
+   - Select your repository
+
+3. **Configure build settings**
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Click "Show advanced" and add your environment variables:
+     - `VITE_SUPABASE_URL`
+     - `VITE_SUPABASE_ANON_KEY`
+
+4. **Deploy the site**
+   - Click "Deploy site"
+   - Wait for the build to complete
+
+5. **Set up continuous deployment**
+   - Netlify will automatically deploy when changes are pushed to your main branch
+   - You can configure branch deploys in the Netlify dashboard
+
+### Environment Variables
+
+For security, never commit your actual environment variables to the repository. Instead:
+
+1. Use `.env.example` to document required variables
+2. Set up environment variables in the Netlify dashboard
+3. For local development, create a `.env` file (which is gitignored)
+
 ## 📝 Development Roadmap
 
 - [x] Project setup with React and Vite
