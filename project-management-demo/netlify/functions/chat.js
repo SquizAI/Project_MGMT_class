@@ -58,14 +58,17 @@ export async function handler(event, context) {
     If the user's message implies creating a task, include a taskSuggestion in your response.
     ${projectContext ? `Current project context: ${projectContext}` : ''}`;
 
-    // Call OpenAI API with structured response format
+    // Call OpenAI API with instructions to return JSON
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
-        { role: "system", content: systemMessage },
+        { 
+          role: "system", 
+          content: `${systemMessage}\n\nYou MUST respond with a valid JSON object that follows this structure:\n{\n  "answer": "Your helpful response here",\n  "taskSuggestion": {\n    "title": "Task title if applicable",\n    "description": "Task description if applicable",\n    "priority": "Low|Medium|High",\n    "estimatedHours": 1.5\n  }\n}\n\nThe taskSuggestion field is optional and should only be included if the user's message implies creating a task.`
+        },
         { role: "user", content: message }
       ],
-      response_format: { type: "json_object", schema: RESPONSE_SCHEMA }
+      response_format: { type: "json_object" }
     });
 
     // Return the structured response

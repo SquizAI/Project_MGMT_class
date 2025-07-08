@@ -74,19 +74,35 @@ const AIAssistant = ({ onCreateTask }) => {
       }
       
       const data = await response.json();
-      const aiResponse = JSON.parse(data.response);
+      let aiResponse;
       
-      // Add AI response to chat
-      setChatHistory(prev => [...prev, { 
-        role: 'assistant', 
-        content: aiResponse.answer,
-        taskSuggestion: aiResponse.taskSuggestion 
-      }]);
+      try {
+        // Handle the response which should be a JSON string
+        if (data.response) {
+          aiResponse = JSON.parse(data.response);
+        } else if (data.error) {
+          throw new Error(data.error);
+        } else {
+          aiResponse = data; // In case the response is already parsed
+        }
+        
+        console.log('AI Response:', aiResponse);
+        
+        // Add AI response to chat
+        setChatHistory(prev => [...prev, { 
+          role: 'assistant', 
+          content: aiResponse.answer,
+          taskSuggestion: aiResponse.taskSuggestion 
+        }]);
       
-      // If there's a task suggestion, offer to create it
-      if (aiResponse.taskSuggestion && onCreateTask) {
-        // Pass the task suggestion to the parent component
-        onCreateTask(aiResponse.taskSuggestion);
+        // If there's a task suggestion, offer to create it
+        if (aiResponse.taskSuggestion && onCreateTask) {
+          // Pass the task suggestion to the parent component
+          onCreateTask(aiResponse.taskSuggestion);
+        }
+      } catch (err) {
+        console.error('Error parsing AI response:', err);
+        setError('Failed to parse the AI response. Please try again.');
       }
       
     } catch (err) {
