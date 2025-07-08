@@ -43,6 +43,9 @@ export async function handler(event, context) {
         body: JSON.stringify({ error: "Message is required" })
       };
     }
+    
+    console.log('Received message:', message);
+    console.log('Project context:', projectContext);
 
     // Initialize OpenAI client
     const openai = new OpenAI({

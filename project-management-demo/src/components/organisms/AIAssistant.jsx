@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 import { getProject } from '../../utils/supabaseClient';
 
 const AIAssistant = ({ onCreateTask }) => {
@@ -10,8 +9,7 @@ const AIAssistant = ({ onCreateTask }) => {
   const [error, setError] = useState(null);
   const [projectContext, setProjectContext] = useState(null);
   const chatContainerRef = useRef(null);
-  const { projectId } = useParams();
-  const { user } = useAuth();
+  const { id: projectId } = useParams();
 
   // Fetch project details if projectId is available
   useEffect(() => {
@@ -67,8 +65,7 @@ const AIAssistant = ({ onCreateTask }) => {
         },
         body: JSON.stringify({
           message,
-          projectContext: projectContext ? JSON.stringify(projectContext) : null,
-          userId: user?.id
+          projectContext: projectContext ? JSON.stringify(projectContext) : null
         }),
       });
       
