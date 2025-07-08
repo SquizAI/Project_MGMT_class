@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getProject, getTasks, deleteProject, deleteTask } from '../../utils/supabaseClient';
+import { getProject, getTasks, deleteProject, deleteTask, createTask } from '../../utils/supabaseClient';
 import Layout from '../templates/Layout';
 import Card from '../atoms/Card';
 import Button from '../atoms/Button';
 import TaskList from '../organisms/TaskList';
+import AIAssistant from '../organisms/AIAssistant';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -73,6 +74,28 @@ const ProjectDetail = () => {
       fetchData();
     } catch (err) {
       console.error('Error deleting task:', err);
+      setError(err.message);
+    }
+  };
+
+  const handleCreateTaskFromAI = async (taskSuggestion) => {
+    try {
+      const newTask = {
+        project_id: id,
+        title: taskSuggestion.title,
+        description: taskSuggestion.description,
+        priority: taskSuggestion.priority.toLowerCase(),
+        status: 'todo',
+        estimated_hours: taskSuggestion.estimatedHours || 0
+      };
+      
+      const { error } = await createTask(newTask);
+      if (error) throw new Error(error.message);
+      
+      // Refresh tasks list
+      fetchData();
+    } catch (err) {
+      console.error('Error creating task from AI suggestion:', err);
       setError(err.message);
     }
   };
@@ -220,6 +243,12 @@ const ProjectDetail = () => {
               isLoading={false}
             />
           )}
+        </div>
+        
+        {/* AI Assistant Section */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">AI Assistant</h2>
+          <AIAssistant onCreateTask={handleCreateTaskFromAI} />
         </div>
       </div>
     </Layout>
