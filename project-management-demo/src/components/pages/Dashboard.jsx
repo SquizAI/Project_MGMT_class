@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProjects, getTasks } from '../../utils/supabaseClient';
+import { supabase } from '../../utils/supabaseClient';
 import Layout from '../templates/Layout';
 import Card from '../atoms/Card';
 import Button from '../atoms/Button';
@@ -17,11 +17,17 @@ const Dashboard = () => {
       setIsLoading(true);
       try {
         // Fetch projects
-        const { data: projectsData, error: projectsError } = await getProjects();
+        const { data: projectsData, error: projectsError } = await supabase
+          .from('projects')
+          .select('*')
+          .order('created_at', { ascending: false });
         if (projectsError) throw new Error(projectsError.message);
         
         // Fetch recent tasks
-        const { data: tasksData, error: tasksError } = await getTasks();
+        const { data: tasksData, error: tasksError } = await supabase
+          .from('tasks')
+          .select('*')
+          .order('created_at', { ascending: false });
         if (tasksError) throw new Error(tasksError.message);
         
         setProjects(projectsData || []);
