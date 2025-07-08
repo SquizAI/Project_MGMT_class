@@ -64,7 +64,7 @@ export async function handler(event, context) {
       messages: [
         { 
           role: "system", 
-          content: `${systemMessage}\n\nYou MUST respond with a valid JSON object that follows this structure:\n{\n  "answer": "Your helpful response here",\n  "taskSuggestion": {\n    "title": "Task title if applicable",\n    "description": "Task description if applicable",\n    "priority": "Low|Medium|High",\n    "estimatedHours": 1.5\n  }\n}\n\nThe taskSuggestion field is optional and should only be included if the user's message implies creating a task.`
+          content: `${systemMessage}\n\nYou MUST respond with a valid JSON object that follows this structure:\n{\n  "answer": "Your helpful response here",\n  "taskSuggestion": {\n    "title": "Task title if applicable",\n    "description": "Task description if applicable",\n    "priority": "Low|Medium|High"\n  }\n}\n\nThe taskSuggestion field is optional and should only be included if the user's message implies creating a task.`
         },
         { role: "user", content: message }
       ],

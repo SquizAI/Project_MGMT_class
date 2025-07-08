@@ -80,17 +80,26 @@ const ProjectDetail = () => {
 
   const handleCreateTaskFromAI = async (taskSuggestion) => {
     try {
+      console.log('Creating task from suggestion:', taskSuggestion);
+      
       const newTask = {
         project_id: id,
         title: taskSuggestion.title,
         description: taskSuggestion.description,
         priority: taskSuggestion.priority.toLowerCase(),
-        status: 'todo',
-        estimated_hours: taskSuggestion.estimatedHours || 0
+        status: 'todo'
+        // Removed estimated_hours as it doesn't exist in the schema
       };
       
-      const { error } = await createTask(newTask);
-      if (error) throw new Error(error.message);
+      console.log('New task to create:', newTask);
+      const { data, error } = await createTask(newTask);
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(error.message);
+      }
+      
+      console.log('Task created successfully:', data);
       
       // Refresh tasks list
       fetchData();
